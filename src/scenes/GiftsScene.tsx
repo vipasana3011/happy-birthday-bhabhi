@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import confetti from "canvas-confetti";
 
 const gifts = [
   { id: 1, word: "you", img: "/assets/gifts/bouquet.png" },
@@ -8,11 +9,45 @@ const gifts = [
   { id: 4, word: "gift", img: "/assets/gifts/cards.png" },
 ];
 
+// 🔊 POP SOUND
+const playPop = () => {
+  try {
+    const ctx = new (window.AudioContext ||
+      (window as any).webkitAudioContext)();
+
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+
+    o.frequency.setValueAtTime(800, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.2);
+
+    g.gain.setValueAtTime(0.3, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+
+    o.connect(g);
+    g.connect(ctx.destination);
+
+    o.start();
+    o.stop(ctx.currentTime + 0.25);
+  } catch {}
+};
+
 export default function GiftsScene({ onNext }: any) {
   const [opened, setOpened] = useState<number[]>([]);
 
   const openGift = (id: number) => {
     if (opened.includes(id)) return;
+
+    playPop();
+
+    // 🎉 mini confetti burst
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#ff8fab", "#ffc2d4", "#fb6f92", "#ffffff"],
+    });
+
     setOpened([...opened, id]);
   };
 
@@ -21,9 +56,9 @@ export default function GiftsScene({ onNext }: any) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 gap-10 overflow-hidden bg-gradient-to-br from-pink-100 via-rose-100 to-pink-200">
 
-      {/* 💖 FLOATING PARTICLES BG */}
+      {/* ✨ FLOATING BG */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(25)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: "100%", opacity: 0 }}
@@ -41,7 +76,7 @@ export default function GiftsScene({ onNext }: any) {
         ))}
       </div>
 
-      {/* TITLE */}
+      {/* 💖 TITLE */}
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -50,7 +85,7 @@ export default function GiftsScene({ onNext }: any) {
         Open Your Gifts 🎁
       </motion.h2>
 
-      {/* GRID */}
+      {/* 🎁 GRID */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 z-10">
 
         {gifts.map((g, i) => {
@@ -59,8 +94,8 @@ export default function GiftsScene({ onNext }: any) {
           return (
             <motion.div
               key={g.id}
-              initial={{ opacity: 0, y: 60, rotate: -5 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15 }}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
@@ -68,29 +103,37 @@ export default function GiftsScene({ onNext }: any) {
               className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 cursor-pointer perspective"
             >
 
-              <div className="relative w-full h-full [transform-style:preserve-3d]">
+              {/* 💎 3D TILT */}
+              <motion.div
+                whileHover={{ rotateX: 8, rotateY: -8 }}
+                className="relative w-full h-full [transform-style:preserve-3d]"
+              >
 
-                {/* 🎁 BOX BASE (3D LOOK) */}
-                <motion.div
-                  animate={isOpen ? { scale: 0.95 } : { scale: 1 }}
-                  className="absolute bottom-0 w-full h-3/4 rounded-2xl bg-gradient-to-br from-pink-300 via-rose-400 to-pink-500 shadow-2xl flex items-center justify-center"
-                >
+                {/* 🎁 BOX BASE (DECORATED) */}
+                <div className="absolute bottom-0 w-full h-3/4 rounded-2xl bg-gradient-to-br from-pink-300 via-rose-400 to-pink-500 shadow-2xl flex items-center justify-center overflow-hidden">
+
+                  {/* ribbon vertical */}
+                  <div className="absolute w-3 bg-white/70 h-full left-1/2 -translate-x-1/2" />
+
+                  {/* ribbon horizontal */}
+                  <div className="absolute h-3 bg-white/70 w-full top-1/2 -translate-y-1/2" />
+
                   {/* glow */}
-                  <div className="absolute inset-0 rounded-2xl bg-white/10 blur-md" />
+                  <div className="absolute inset-0 bg-white/10 blur-md" />
 
                   <div className="px-3 py-1 bg-white text-pink-500 text-xs sm:text-sm rounded-full shadow font-semibold z-10">
                     {g.word}
                   </div>
-                </motion.div>
+                </div>
 
-                {/* 🎁 LID */}
+                {/* 🎀 LID */}
                 <motion.div
                   animate={
                     isOpen
                       ? { rotateX: -140, y: -25 }
                       : { rotateX: 0, y: 0 }
                   }
-                  transition={{ duration: 0.7, ease: "easeInOut" }}
+                  transition={{ duration: 0.7 }}
                   className="absolute top-0 w-full h-1/3 rounded-2xl bg-gradient-to-br from-pink-400 to-rose-600 origin-top shadow-xl"
                 >
                   <div className="absolute left-1/2 -translate-x-1/2 -top-3 text-2xl">
@@ -98,23 +141,22 @@ export default function GiftsScene({ onNext }: any) {
                   </div>
                 </motion.div>
 
-                {/* 🎁 ITEM POP */}
+                {/* 🎁 ITEM */}
                 <AnimatePresence>
                   {isOpen && (
                     <motion.img
                       src={g.img}
                       initial={{ y: 40, scale: 0, opacity: 0 }}
-                      animate={{ y: -90, scale: 1.2, opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      animate={{ y: -100, scale: 1.2, opacity: 1 }}
                       transition={{ type: "spring", stiffness: 120 }}
                       className="absolute left-1/2 -translate-x-1/2 top-6 w-20 sm:w-24 z-20 drop-shadow-2xl"
                     />
                   )}
                 </AnimatePresence>
 
-                {/* ✨ SPARK BURST */}
+                {/* ✨ SPARKLES */}
                 {isOpen &&
-                  [...Array(10)].map((_, i) => (
+                  [...Array(12)].map((_, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 1, scale: 0 }}
@@ -133,13 +175,13 @@ export default function GiftsScene({ onNext }: any) {
 
                 {/* 💖 HEART BURST */}
                 {isOpen &&
-                  [...Array(6)].map((_, i) => (
+                  [...Array(8)].map((_, i) => (
                     <motion.div
-                      key={"h" + i}
+                      key={i}
                       initial={{ opacity: 1, scale: 0 }}
                       animate={{
                         opacity: 0,
-                        scale: 1.2,
+                        scale: 1.3,
                         x: Math.random() * 80 - 40,
                         y: Math.random() * -100,
                       }}
@@ -150,18 +192,26 @@ export default function GiftsScene({ onNext }: any) {
                     </motion.div>
                   ))}
 
-              </div>
+              </motion.div>
             </motion.div>
           );
         })}
       </div>
 
-      {/* BUTTON */}
+      {/* 🚀 BUTTON */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         disabled={!allOpened}
-        onClick={onNext}
+        onClick={() => {
+          // 🎉 FINAL CONFETTI
+          confetti({
+            particleCount: 200,
+            spread: 120,
+            origin: { y: 0.5 },
+          });
+          onNext();
+        }}
         className={`mt-6 px-8 py-4 rounded-full text-white transition z-10 ${
           allOpened
             ? "bg-pink-500 hover:scale-105 shadow-xl"
