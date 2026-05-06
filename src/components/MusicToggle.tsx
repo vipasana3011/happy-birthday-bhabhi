@@ -5,30 +5,33 @@ export default function MusicToggle() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
 
-  // 🎵 GLOBAL ACCESS (important)
-  (window as any).globalMusic = audioRef;
-
-  const toggleMusic = async () => {
+  const playMusic = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    audio.volume = 0.4;
+
     try {
-      if (playing) {
-        audio.pause();
-        setPlaying(false);
-      } else {
-        audio.volume = 0.4;
-        await audio.play();
-        setPlaying(true);
-      }
+      await audio.play();
+      setPlaying(true);
     } catch (err) {
-      console.log("Audio blocked:", err);
+      console.log("Blocked:", err);
     }
   };
 
+  const pauseMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.pause();
+    setPlaying(false);
+  };
+
+  // 👇 expose ONLY functions via window (safe)
+  (window as any).playMusic = playMusic;
+
   return (
     <>
-      {/* 🎵 AUDIO */}
       <audio
         ref={audioRef}
         src="/assets/TumhoToh.mp3"
@@ -36,16 +39,11 @@ export default function MusicToggle() {
         preload="auto"
       />
 
-      {/* 🎛 BUTTON */}
       <button
-        onClick={toggleMusic}
-        className="fixed top-5 right-5 z-50 glass rounded-full p-3 hover:scale-110 transition"
+        onClick={playing ? pauseMusic : playMusic}
+        className="fixed top-5 right-5 z-50 glass rounded-full p-3"
       >
-        {playing ? (
-          <Volume2 className="h-5 w-5 text-rose-500" />
-        ) : (
-          <VolumeX className="h-5 w-5 text-gray-500" />
-        )}
+        {playing ? <Volume2 /> : <VolumeX />}
       </button>
     </>
   );
