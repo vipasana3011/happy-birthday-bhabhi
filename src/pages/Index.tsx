@@ -11,7 +11,6 @@ import FinalScene from "@/scenes/FinalScene";
 
 import { SceneId } from "@/scenes/types";
 
-// 🎬 Scene order
 const ORDER: SceneId[] = [
   "hero",
   "cake",
@@ -25,30 +24,22 @@ const ORDER: SceneId[] = [
 const Index = () => {
   const [scene, setScene] = useState<SceneId>("hero");
 
-  // ➡️ NEXT SCENE
   const next = () => {
     const i = ORDER.indexOf(scene);
     const nextScene = ORDER[i + 1] || "final";
-
-    console.log("➡️ SCENE CHANGED:", nextScene);
     setScene(nextScene);
   };
 
-  // 🔁 RESET
-  const reset = () => {
-    setScene("hero");
-  };
+  const reset = () => setScene("hero");
 
-  // ✨ animation
   const variants = {
-    initial: { opacity: 0, scale: 1.05 },
+    initial: { opacity: 0, scale: 1.03 },
     animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
+    exit: { opacity: 0, scale: 0.97 },
   };
 
   return (
-    // ✅ IMPORTANT: SCROLL ENABLED
-    <main className="w-full min-h-screen relative overflow-x-hidden">
+    <main className="w-full min-h-screen overflow-x-hidden">
 
       <AnimatePresence mode="wait">
         <motion.section
@@ -57,8 +48,8 @@ const Index = () => {
           initial="initial"
           animate="animate"
           exit="exit"
-          transition={{ duration: 0.8 }}
-          className="absolute inset-0"
+          transition={{ duration: 0.7 }}
+          className="relative w-full min-h-screen"
         >
 
           {scene === "hero" && <HeroScene onNext={next} />}
