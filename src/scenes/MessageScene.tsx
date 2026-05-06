@@ -25,7 +25,7 @@ const MessageScene = ({ onNext }: SceneProps) => {
       {/* 💖 floating hearts */}
       <FloatingHearts count={8} variant="hearts" />
 
-      {/* ✨ background glow (fixed size) */}
+      {/* ✨ background glow */}
       <div className="absolute w-64 h-64 sm:w-96 sm:h-96 bg-pink-300/25 blur-3xl rounded-full animate-pulse" />
 
       {/* 💌 LETTER CARD */}
@@ -41,10 +41,8 @@ const MessageScene = ({ onNext }: SceneProps) => {
         className="relative z-10 w-full max-w-lg cursor-pointer"
       >
 
-        {/* border */}
         <div className="rounded-2xl p-[2px] bg-gradient-to-br from-pink-300 via-rose-300 to-pink-400 shadow-xl">
 
-          {/* content */}
           <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl p-5 sm:p-8 overflow-hidden">
 
             {/* shine */}
@@ -86,23 +84,21 @@ const MessageScene = ({ onNext }: SceneProps) => {
               ))}
             </motion.div>
 
-            {/* button */}
-            {opened && (
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="mt-6 flex justify-center"
+            {/* ✅ FIXED BUTTON (ALWAYS VISIBLE) */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 }}
+              className="mt-6 flex justify-center"
+            >
+              <Button
+                size="lg"
+                onClick={onNext}
+                className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg"
               >
-                <Button
-                  size="lg"
-                  onClick={onNext}
-                  className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg"
-                >
-                  Forever & Always 💖
-                </Button>
-              </motion.div>
-            )}
+                Continue 💖
+              </Button>
+            </motion.div>
 
           </div>
         </div>
