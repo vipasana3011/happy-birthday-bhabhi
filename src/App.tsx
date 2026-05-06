@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import HeroScene from "@/scenes/HeroScene";
 import CakeScene from "@/scenes/CakeScene";
 import AlbumScene from "@/scenes/AlbumScene";
@@ -18,7 +19,7 @@ const Index = () => {
     <div className="w-full min-h-screen overflow-y-auto">
 
       {scene === 0 && <HeroScene onNext={nextScene} />}
-      {scene === 1 && <CakeScene onNext={nextScene} />} {/* 🎂 yahan */}
+      {scene === 1 && <CakeScene onNext={nextScene} />}
       {scene === 2 && <AlbumScene onNext={nextScene} />}
       {scene === 3 && <BalloonScene onNext={nextScene} />}
       {scene === 4 && <GiftsScene onNext={nextScene} />}
