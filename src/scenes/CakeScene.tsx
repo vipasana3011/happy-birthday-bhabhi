@@ -9,19 +9,18 @@ const CakeScene = ({ onNext }: SceneProps) => {
 
   const handleCut = () => {
     if (cut) return;
-
     setCut(true);
 
     setTimeout(() => {
       confetti({
-        particleCount: 180,
+        particleCount: 200,
         spread: 100,
         origin: { y: 0.6 },
-        colors: ["#ff8fab", "#ffc2d4", "#ffe5ec", "#ffffff"],
+        colors: ["#ff6fa8", "#ffc0e0", "#ffd700", "#c39bff", "#ffffff"],
       });
-    }, 600);
+    }, 800);
 
-    setTimeout(() => onNext(), 2500);
+    setTimeout(() => onNext(), 2800);
   };
 
   return (
@@ -34,26 +33,26 @@ const CakeScene = ({ onNext }: SceneProps) => {
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="font-display text-2xl sm:text-3xl md:text-5xl gradient-text mb-6 text-center z-10"
+        className="font-display text-2xl sm:text-3xl md:text-5xl gradient-text mb-6 z-10 text-center"
       >
-        Make a wish 🎂
+        Make a wish, beautiful
       </motion.h2>
 
-      {/* CAKE AREA */}
+      {/* CAKE AREA (RESPONSIVE FIX) */}
       <div className="relative w-[220px] sm:w-[260px] md:w-[320px] h-[260px] sm:h-[300px] md:h-[340px] z-10">
 
-        {/* 🔪 KNIFE */}
+        {/* Knife */}
         <motion.div
-          initial={{ x: 120, y: -80, rotate: 30, opacity: 0 }}
-          animate={cut ? { x: 0, y: 0, rotate: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
+          initial={{ x: 200, y: -120, rotate: 35, opacity: 0 }}
+          animate={cut ? { x: 0, y: 0, rotate: 0, opacity: 1 } : { x: 200, y: -120, rotate: 35, opacity: 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
           className="absolute left-1/2 -translate-x-1/2 top-0 z-30"
         >
-          <div className="w-1.5 h-28 sm:h-36 bg-gradient-to-b from-gray-200 to-gray-400 rounded shadow-lg" />
-          <div className="w-5 h-8 bg-gradient-to-b from-amber-700 to-amber-900 rounded mx-auto -mt-1" />
+          <div className="w-1.5 sm:w-2 h-28 sm:h-40 bg-gradient-to-b from-gray-200 to-gray-400 rounded shadow-lg" />
+          <div className="w-5 sm:w-6 h-8 sm:h-10 bg-gradient-to-b from-amber-700 to-amber-900 rounded mx-auto -mt-1" />
         </motion.div>
 
-        {/* 🕯️ CANDLE */}
+        {/* Candle */}
         <div className="absolute left-1/2 -translate-x-1/2 top-2 z-20 flex flex-col items-center">
           <AnimatePresence>
             {!cut && (
@@ -62,56 +61,34 @@ const CakeScene = ({ onNext }: SceneProps) => {
                 animate={{ scale: [1, 1.2, 1] }}
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ duration: 0.6, repeat: Infinity }}
-                className="w-2 h-4 rounded-full bg-gradient-to-t from-yellow-400 to-orange-200"
-                style={{ filter: "drop-shadow(0 0 10px #ffd166)" }}
+                className="w-2 sm:w-3 h-4 sm:h-5 rounded-full bg-gradient-to-t from-orange-400 to-yellow-200"
+                style={{ filter: "drop-shadow(0 0 12px hsl(45 100% 70%))" }}
               />
             )}
           </AnimatePresence>
-          <div className="w-1 h-6 bg-pink-200 rounded-full mt-1" />
+          <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-pink-200 rounded-full mt-1" />
         </div>
 
-        {/* 🎂 CAKE (3D STYLE) */}
+        {/* Cake Left */}
         <motion.div
-          animate={cut ? { scale: 0.95 } : { scale: 1 }}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full flex justify-center"
+          animate={cut ? { x: -40, rotate: -8 } : { x: 0 }}
+          transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+          className="absolute left-0 top-12 w-1/2 h-[200px] sm:h-[240px] md:h-[270px] origin-right z-10"
         >
-          <div className="relative">
-
-            {/* TOP LAYER */}
-            <div className="w-40 sm:w-48 md:w-56 h-16 sm:h-20 rounded-t-full bg-gradient-to-b from-pink-200 to-pink-300 shadow-inner" />
-
-            {/* CREAM DRIP */}
-            <div className="w-40 sm:w-48 md:w-56 h-4 bg-pink-400 relative">
-              <div className="absolute w-full h-full"
-                style={{
-                  clipPath:
-                    "polygon(0 0, 100% 0, 100% 60%, 90% 100%, 75% 60%, 60% 100%, 45% 60%, 30% 100%, 15% 60%, 0 100%)",
-                }}
-              />
-            </div>
-
-            {/* MAIN BODY */}
-            <div className="w-48 sm:w-56 md:w-64 h-28 sm:h-32 md:h-36 bg-gradient-to-b from-rose-200 to-pink-400 rounded-b-2xl shadow-xl relative">
-
-              {/* decoration dots */}
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2.5 h-2.5 bg-white rounded-full"
-                  style={{
-                    top: 20 + i * 20,
-                    left: i % 2 === 0 ? 20 : "auto",
-                    right: i % 2 !== 0 ? 20 : "auto",
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* BASE SHADOW */}
-            <div className="w-56 sm:w-64 md:w-72 h-4 bg-black/10 blur-xl rounded-full mx-auto mt-2" />
-
-          </div>
+          <CakeHalf side="left" />
         </motion.div>
+
+        {/* Cake Right */}
+        <motion.div
+          animate={cut ? { x: 40, rotate: 8 } : { x: 0 }}
+          transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+          className="absolute right-0 top-12 w-1/2 h-[200px] sm:h-[240px] md:h-[270px] origin-left z-10"
+        >
+          <CakeHalf side="right" />
+        </motion.div>
+
+        {/* Plate */}
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[260px] sm:w-[300px] md:w-[360px] h-5 sm:h-6 rounded-full bg-white/60 blur-sm" />
       </div>
 
       {/* BUTTON */}
@@ -124,7 +101,7 @@ const CakeScene = ({ onNext }: SceneProps) => {
           <Button
             size="lg"
             onClick={handleCut}
-            className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg hover:scale-105 transition"
+            className="rounded-full px-6 sm:px-10 py-4 text-base sm:text-lg shadow-glow bg-gradient-to-r from-primary to-[hsl(var(--primary-glow))] hover:scale-105 transition-transform"
           >
             🔪 Cut the Cake
           </Button>
@@ -133,5 +110,56 @@ const CakeScene = ({ onNext }: SceneProps) => {
     </div>
   );
 };
+
+const CakeHalf = ({ side }: { side: "left" | "right" }) => (
+  <div className="relative w-full h-full">
+
+    {/* Top */}
+    <div
+      className={`absolute top-0 ${side === "left" ? "right-0" : "left-0"} w-[100px] sm:w-[120px] md:w-[140px] h-[60px] sm:h-[70px] md:h-[80px]`}
+      style={{
+        background: "linear-gradient(180deg, hsl(340 80% 92%), hsl(340 70% 80%))",
+        borderTopLeftRadius: side === "left" ? 70 : 0,
+        borderTopRightRadius: side === "right" ? 70 : 0,
+        boxShadow: "inset 0 -8px 0 hsl(340 60% 70%)",
+      }}
+    />
+
+    {/* Cream drip */}
+    <div
+      className={`absolute top-[58px] sm:top-[68px] md:top-[78px] ${side === "left" ? "right-0" : "left-0"} w-[100px] sm:w-[120px] md:w-[140px] h-3`}
+      style={{
+        background: "hsl(340 90% 75%)",
+        clipPath:
+          side === "left"
+            ? "polygon(0 0, 100% 0, 100% 100%, 90% 60%, 75% 100%, 60% 50%, 45% 100%, 30% 60%, 15% 100%, 0 50%)"
+            : "polygon(0 0, 100% 0, 100% 50%, 85% 100%, 70% 60%, 55% 100%, 40% 50%, 25% 100%, 10% 60%, 0 100%)",
+      }}
+    />
+
+    {/* Bottom */}
+    <div
+      className={`absolute top-[70px] sm:top-[80px] md:top-[88px] ${side === "left" ? "right-0" : "left-0"} w-[120px] sm:w-[150px] md:w-[170px] h-[130px] sm:h-[150px] md:h-[180px]`}
+      style={{
+        background: "linear-gradient(180deg, hsl(30 80% 90%), hsl(20 60% 75%))",
+        borderBottomLeftRadius: side === "left" ? 16 : 0,
+        borderBottomRightRadius: side === "right" ? 16 : 0,
+      }}
+    />
+
+    {/* dots */}
+    {[0, 1, 2].map((i) => (
+      <div
+        key={i}
+        className="absolute w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-white/90"
+        style={{
+          top: 90 + i * 30,
+          [side === "left" ? "right" : "left"]: 15 + (i % 2) * 25,
+          boxShadow: "0 0 8px hsl(340 100% 80%)",
+        }}
+      />
+    ))}
+  </div>
+);
 
 export default CakeScene;
