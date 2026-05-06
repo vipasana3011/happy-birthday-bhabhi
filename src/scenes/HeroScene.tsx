@@ -1,28 +1,14 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FloatingHearts from "@/components/FloatingHearts";
-import { Volume2, VolumeX, Sparkles } from "lucide-react";
 import { SceneProps } from "./types";
 
-interface Props extends SceneProps {
-  musicOn: boolean;
-  toggleMusic: () => void;
-}
-
-const HeroScene = ({ onNext, musicOn, toggleMusic }: Props) => {
+const HeroScene = ({ onNext }: SceneProps) => {
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden px-4 py-10">
 
       <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
       <FloatingHearts count={12} />
-
-      {/* 🔊 music btn */}
-      <button
-        onClick={toggleMusic}
-        className="absolute top-4 right-4 glass rounded-full p-2 z-20"
-      >
-        {musicOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-      </button>
 
       <div className="relative z-10 text-center w-full max-w-md">
 
@@ -49,7 +35,7 @@ const HeroScene = ({ onNext, musicOn, toggleMusic }: Props) => {
         <div className="mt-8">
           <Button
             onClick={onNext}
-            className="rounded-full px-6 py-4 text-sm sm:text-base"
+            className="rounded-full px-6 py-4"
           >
             Begin ✨
           </Button>
