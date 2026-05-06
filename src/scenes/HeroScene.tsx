@@ -5,19 +5,21 @@ import { SceneProps } from "./types";
 
 const HeroScene = ({ onNext }: SceneProps) => {
 
-  // 🎵 SAFE MUSIC START (BEST METHOD)
-  const handleBegin = async () => {
+  // 🎵 SAFE MUSIC START
+  const handleBegin = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // 🛑 extra safety
+
     const playMusic = (window as any).playMusic;
 
     if (playMusic) {
       try {
-        await playMusic(); // 🎵 start music from MusicToggle
+        await playMusic(); // 🎵 start music
       } catch (e) {
         console.log("Music blocked:", e);
       }
     }
 
-    onNext(); // 🎬 move to next scene
+    onNext(); // 🎬 move scene
   };
 
   return (
