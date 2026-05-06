@@ -1,9 +1,8 @@
 import { useState } from "react";
-import AlbumScene from "@/components/AlbumScene";
-import BalloonScene from "@/components/BalloonScene";
-import GiftsScene from "@/components/GiftsScene";
-import MessageScene from "@/components/MessageScene";
-
+import AlbumScene from "@/scenes/AlbumScene";
+import BalloonScene from "@/scenes/BalloonScene";
+import GiftsScene from "@/scenes/GiftsScene";
+import MessageScene from "@/scenes/MessageScene";
 const Index = () => {
   const [scene, setScene] = useState(0);
 
