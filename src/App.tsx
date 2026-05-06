@@ -1,27 +1,27 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { useState } from "react";
+import AlbumScene from "@/components/AlbumScene";
+import BalloonScene from "@/components/BalloonScene";
+import GiftsScene from "@/components/GiftsScene";
+import MessageScene from "@/components/MessageScene";
 
-const queryClient = new QueryClient();
+const Index = () => {
+  const [scene, setScene] = useState(0);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  const nextScene = () => {
+    setScene((prev) => prev + 1);
+  };
 
-export default App;
+  return (
+    // 🔥 MOST IMPORTANT FIX HERE
+    <div className="w-full min-h-screen overflow-y-auto">
+
+      {scene === 0 && <AlbumScene onNext={nextScene} />}
+      {scene === 1 && <BalloonScene onNext={nextScene} />}
+      {scene === 2 && <GiftsScene onNext={nextScene} />}
+      {scene === 3 && <MessageScene onNext={nextScene} />}
+
+    </div>
+  );
+};
+
+export default Index;
