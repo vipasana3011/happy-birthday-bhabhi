@@ -5,6 +5,9 @@ export default function MusicToggle() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
 
+  // 🎵 GLOBAL ACCESS (important)
+  (window as any).globalMusic = audioRef;
+
   const toggleMusic = async () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -19,13 +22,13 @@ export default function MusicToggle() {
         setPlaying(true);
       }
     } catch (err) {
-      console.log("Audio blocked until user interaction:", err);
+      console.log("Audio blocked:", err);
     }
   };
 
   return (
     <>
-      {/* 🎵 AUDIO FILE */}
+      {/* 🎵 AUDIO */}
       <audio
         ref={audioRef}
         src="/assets/TumhoToh.mp3"
