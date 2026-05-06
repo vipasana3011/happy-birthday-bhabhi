@@ -11,6 +11,7 @@ import FinalScene from "@/scenes/FinalScene";
 
 import { SceneId } from "@/scenes/types";
 
+// 🎬 Scene order
 const ORDER: SceneId[] = [
   "hero",
   "cake",
@@ -24,19 +25,21 @@ const ORDER: SceneId[] = [
 const Index = () => {
   const [scene, setScene] = useState<SceneId>("hero");
 
-  // 🎬 NEXT SCENE
+  // ➡️ NEXT SCENE
   const next = () => {
     const index = ORDER.indexOf(scene);
     const nextScene = ORDER[index + 1] || "final";
+
     console.log("➡️ SCENE CHANGED:", nextScene);
     setScene(nextScene);
   };
 
-  // 🔁 RESET TO START
+  // 🔁 RESET
   const reset = () => {
     setScene("hero");
   };
 
+  // ✨ smooth animation
   const variants = {
     initial: { opacity: 0, scale: 1.05 },
     animate: { opacity: 1, scale: 1 },
@@ -57,33 +60,13 @@ const Index = () => {
           className="absolute inset-0"
         >
 
-          {scene === "hero" && (
-            <HeroScene onNext={next} />
-          )}
-
-          {scene === "cake" && (
-            <CakeScene onNext={next} />
-          )}
-
-          {scene === "album" && (
-            <AlbumScene onNext={next} />
-          )}
-
-          {scene === "balloons" && (
-            <BalloonScene onNext={next} />
-          )}
-
-          {scene === "gifts" && (
-            <GiftsScene onNext={next} />
-          )}
-
-          {scene === "message" && (
-            <MessageScene onNext={next} />
-          )}
-
-          {scene === "final" && (
-            <FinalScene onNext={reset} />
-          )}
+          {scene === "hero" && <HeroScene onNext={next} />}
+          {scene === "cake" && <CakeScene onNext={next} />}
+          {scene === "album" && <AlbumScene onNext={next} />}
+          {scene === "balloons" && <BalloonScene onNext={next} />}
+          {scene === "gifts" && <GiftsScene onNext={next} />}
+          {scene === "message" && <MessageScene onNext={next} />}
+          {scene === "final" && <FinalScene onNext={reset} />}
 
         </motion.section>
       </AnimatePresence>
