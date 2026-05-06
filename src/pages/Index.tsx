@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Loader from "@/components/Loader";
@@ -31,31 +31,10 @@ const Index = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // ⏳ Loader
-  useEffect(() => {
+  useState(() => {
     const t = setTimeout(() => setLoading(false), 1800);
     return () => clearTimeout(t);
-  }, []);
-
-  // 🎵 FIRST USER CLICK MUSIC START (IMPORTANT FIX)
-  useEffect(() => {
-    const startMusicOnFirstClick = () => {
-      const audio = audioRef.current;
-      if (!audio || musicOn) return;
-
-      audio.volume = 0.45;
-      audio.play().then(() => {
-        setMusicOn(true);
-      }).catch(() => {});
-
-      window.removeEventListener("click", startMusicOnFirstClick);
-    };
-
-    window.addEventListener("click", startMusicOnFirstClick);
-
-    return () => {
-      window.removeEventListener("click", startMusicOnFirstClick);
-    };
-  }, [musicOn]);
+  });
 
   // 🎬 Next Scene
   const next = () => {
@@ -63,7 +42,22 @@ const Index = () => {
     setScene(ORDER[(i + 1) % ORDER.length]);
   };
 
-  // 🎵 Toggle Music (from UI button)
+  // 🎵 START MUSIC ONLY ON HERO CLICK (FIX)
+  const startMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio || musicOn) return;
+
+    audio.volume = 0.45;
+
+    try {
+      await audio.play();
+      setMusicOn(true);
+    } catch (e) {
+      console.log("Music blocked:", e);
+    }
+  };
+
+  // 🎵 Toggle Music
   const toggleMusic = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -72,7 +66,7 @@ const Index = () => {
       audio.pause();
       setMusicOn(false);
     } else {
-      audio.play().then(() => setMusicOn(true)).catch(() => {});
+      audio.play().then(() => setMusicOn(true));
     }
   };
 
@@ -84,7 +78,7 @@ const Index = () => {
 
   return (
     <>
-      {/* 🎵 GLOBAL AUDIO (ONLY ONE AUDIO) */}
+      {/* 🎵 AUDIO */}
       <audio
         ref={audioRef}
         src="/assets/TumhoToh.mp3"
@@ -108,7 +102,10 @@ const Index = () => {
           >
             {scene === "hero" && (
               <HeroScene
-                onNext={next}
+                onNext={async () => {
+                  await startMusic(); // 🔥 MUSIC START HERE
+                  next();
+                }}
                 musicOn={musicOn}
                 toggleMusic={toggleMusic}
               />
@@ -124,19 +121,6 @@ const Index = () => {
             )}
           </motion.section>
         </AnimatePresence>
-
-        {/* 🎯 Scene dots */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-50">
-          {ORDER.map((s) => (
-            <button
-              key={s}
-              onClick={() => setScene(s)}
-              className={`h-1.5 rounded-full transition-all ${
-                scene === s ? "w-8 bg-pink-500" : "w-2 bg-pink-300/40"
-              }`}
-            />
-          ))}
-        </div>
 
       </main>
     </>
