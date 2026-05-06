@@ -6,11 +6,16 @@ import { SceneProps } from "./types";
 
 const MESSAGE = `🎉💗 Happy Birthday to the cutest girl ever 💗🎉
 
-You’re honestly one of the most special people in my life. Being around you just makes everything feel lighter, happier, and way more fun.
+You’re honestly one of the most special people in my life.
+Being around you makes everything lighter, happier & better.
 
-Your smile, your vibe, your little silly moments… everything about you is just so adorable 😌💕
+Your smile, your vibe, your little silly moments…
+everything about you feels like magic ✨💕
 
-I hope your day is filled with love, cake, laughter, and all the happiness you deserve ✨
+I hope your day is full of love, cake, laughter & happiness.
+
+And just so you know…
+you are kinda my favorite person 😏💘
 
 Happy Birthday again, Surbhi 🎂💞`;
 
@@ -18,56 +23,85 @@ const MessageScene = ({ onNext }: SceneProps) => {
   const [opened, setOpened] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-b from-pink-50/40 to-rose-100/30 overflow-hidden">
+    <div className="relative w-full min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden bg-gradient-to-b from-pink-100 via-rose-50 to-pink-200">
 
-      <FloatingHearts count={8} variant="hearts" />
+      {/* floating hearts */}
+      <FloatingHearts count={12} variant="hearts" />
 
-      {/* glow */}
-      <div className="absolute w-64 h-64 sm:w-96 sm:h-96 bg-pink-300/25 blur-3xl rounded-full animate-pulse" />
+      {/* animated glow blobs */}
+      <div className="absolute w-72 h-72 bg-pink-300/30 blur-3xl rounded-full top-10 left-10 animate-pulse" />
+      <div className="absolute w-72 h-72 bg-rose-300/30 blur-3xl rounded-full bottom-10 right-10 animate-pulse" />
 
       {/* card */}
-      <div
-        className="relative z-10 w-full max-w-lg"
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0, rotateX: 20 }}
+        animate={{ scale: 1, opacity: 1, rotateX: 0 }}
+        transition={{ duration: 0.8 }}
         onClick={() => setOpened(true)}
+        className="relative z-10 w-full max-w-lg cursor-pointer"
       >
 
-        <div className="rounded-2xl p-[2px] bg-gradient-to-br from-pink-300 via-rose-300 to-pink-400 shadow-xl">
+        <div className="rounded-3xl p-[2px] bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 shadow-2xl">
 
-          <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl p-5 sm:p-8 overflow-hidden">
+          <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8">
 
-            <h2 className="text-xl sm:text-2xl md:text-3xl text-center text-pink-500 mb-5">
-              A letter for you 💌
-            </h2>
+            {/* title */}
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              animate={opened ? { opacity: 1, y: 0 } : {}}
+              className="text-center text-2xl sm:text-3xl text-pink-500 font-semibold mb-4"
+            >
+              💌 A Special Letter
+            </motion.h2>
 
-            {/* message */}
-            <div className="text-left">
+            {/* message box */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={opened ? { opacity: 1 } : {}}
+              transition={{ duration: 1 }}
+              className="max-h-[300px] overflow-y-auto pr-2 space-y-3"
+            >
               {MESSAGE.split("\n").map((line, i) => (
-                <p
+                <motion.p
                   key={i}
-                  className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 mb-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={opened ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: i * 0.05 }}
+                  className="text-gray-700 text-sm sm:text-base leading-relaxed"
                 >
                   {line}
-                </p>
+                </motion.p>
               ))}
-            </div>
+            </motion.div>
 
-            {/* BUTTON (100% WORKING) */}
-            <div className="mt-6 flex justify-center">
+            {/* hint */}
+            {!opened && (
+              <p className="text-center text-xs text-gray-400 mt-4 animate-pulse">
+                Tap to open 💖
+              </p>
+            )}
+
+            {/* button */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={opened ? { opacity: 1 } : {}}
+              transition={{ delay: 1 }}
+              className="mt-6 flex justify-center"
+            >
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("🔥 NEXT CLICKED");
                   onNext();
                 }}
-                className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg hover:scale-105"
+                className="rounded-full px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg hover:scale-105 transition-transform"
               >
                 Continue 💖
               </Button>
-            </div>
+            </motion.div>
 
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
