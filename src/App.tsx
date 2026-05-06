@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import HeroScene from "@/scenes/HeroScene";
 import CakeScene from "@/scenes/CakeScene";
@@ -14,6 +14,11 @@ const Index = () => {
   const nextScene = () => {
     setScene((prev) => prev + 1);
   };
+
+  // ✅ DEBUG (important)
+  useEffect(() => {
+    console.log("CURRENT SCENE:", scene);
+  }, [scene]);
 
   return (
     <div className="w-full min-h-screen overflow-y-auto">
