@@ -1,58 +1,42 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Index from "@/pages/Index";
 
-import HeroScene from "@/scenes/HeroScene";
-import CakeScene from "@/scenes/CakeScene";
-import AlbumScene from "@/scenes/AlbumScene";
-import BalloonScene from "@/scenes/BalloonScene";
-import GiftsScene from "@/scenes/GiftsScene";
-import MessageScene from "@/scenes/MessageScene";
-import FinalScene from "@/scenes/FinalScene";
+const App = () => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
 
-const Index = () => {
-  const [scene, setScene] = useState(0);
+  // 🎵 PLAY MUSIC (must be triggered by user click)
+  const playMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-  // 🎬 NEXT SCENE
-  const nextScene = () => {
-    setScene((prev) => {
-      const next = prev + 1;
-      console.log("➡️ SCENE CHANGED TO:", next);
-      return next;
-    });
+    audio.volume = 0.4;
+
+    try {
+      await audio.play();
+      setPlaying(true);
+    } catch (e) {
+      console.log("Music blocked:", e);
+    }
   };
 
+  // 🎵 expose globally so HeroScene can trigger it
+  (window as any).playMusic = playMusic;
+
   return (
-    <div className="w-full min-h-screen overflow-hidden">
+    <>
+      {/* 🎵 GLOBAL AUDIO */}
+      <audio
+        ref={audioRef}
+        src="/assets/TumhoToh.mp3"
+        loop
+        preload="auto"
+      />
 
-      {scene === 0 && (
-        <HeroScene onNext={nextScene} />
-      )}
-
-      {scene === 1 && (
-        <CakeScene onNext={nextScene} />
-      )}
-
-      {scene === 2 && (
-        <AlbumScene onNext={nextScene} />
-      )}
-
-      {scene === 3 && (
-        <BalloonScene onNext={nextScene} />
-      )}
-
-      {scene === 4 && (
-        <GiftsScene onNext={nextScene} />
-      )}
-
-      {scene === 5 && (
-        <MessageScene onNext={nextScene} />
-      )}
-
-      {scene === 6 && (
-        <FinalScene onNext={() => setScene(0)} />
-      )}
-
-    </div>
+      {/* 🎬 MAIN APP */}
+      <Index />
+    </>
   );
 };
 
-export default Index;
+export default App;
