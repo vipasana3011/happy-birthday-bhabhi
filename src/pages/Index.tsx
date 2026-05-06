@@ -1,7 +1,5 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
-import Loader from "@/components/Loader";
 
 import HeroScene from "@/scenes/HeroScene";
 import CakeScene from "@/scenes/CakeScene";
@@ -24,50 +22,19 @@ const ORDER: SceneId[] = [
 ];
 
 const Index = () => {
-  const [loading, setLoading] = useState(true);
   const [scene, setScene] = useState<SceneId>("hero");
-  const [musicOn, setMusicOn] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // ⏳ Loader
-  useState(() => {
-    const t = setTimeout(() => setLoading(false), 1800);
-    return () => clearTimeout(t);
-  });
-
-  // 🎬 Next Scene
+  // 🎬 NEXT SCENE
   const next = () => {
-    const i = ORDER.indexOf(scene);
-    setScene(ORDER[(i + 1) % ORDER.length]);
+    const index = ORDER.indexOf(scene);
+    const nextScene = ORDER[index + 1] || "final";
+    console.log("➡️ SCENE CHANGED:", nextScene);
+    setScene(nextScene);
   };
 
-  // 🎵 START MUSIC ONLY ON HERO CLICK (FIX)
-  const startMusic = async () => {
-    const audio = audioRef.current;
-    if (!audio || musicOn) return;
-
-    audio.volume = 0.45;
-
-    try {
-      await audio.play();
-      setMusicOn(true);
-    } catch (e) {
-      console.log("Music blocked:", e);
-    }
-  };
-
-  // 🎵 Toggle Music
-  const toggleMusic = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (musicOn) {
-      audio.pause();
-      setMusicOn(false);
-    } else {
-      audio.play().then(() => setMusicOn(true));
-    }
+  // 🔁 RESET TO START
+  const reset = () => {
+    setScene("hero");
   };
 
   const variants = {
@@ -77,53 +44,51 @@ const Index = () => {
   };
 
   return (
-    <>
-      {/* 🎵 AUDIO */}
-      <audio
-        ref={audioRef}
-        src="/assets/TumhoToh.mp3"
-        loop
-        preload="auto"
-      />
+    <main className="fixed inset-0 w-screen h-screen overflow-hidden">
 
-      {loading && <Loader />}
+      <AnimatePresence mode="wait">
+        <motion.section
+          key={scene}
+          variants={variants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0"
+        >
 
-      <main className="fixed inset-0 w-screen h-screen overflow-hidden">
+          {scene === "hero" && (
+            <HeroScene onNext={next} />
+          )}
 
-        <AnimatePresence mode="wait">
-          <motion.section
-            key={scene}
-            variants={variants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.9 }}
-            className="absolute inset-0"
-          >
-            {scene === "hero" && (
-              <HeroScene
-                onNext={async () => {
-                  await startMusic(); // 🔥 MUSIC START HERE
-                  next();
-                }}
-                musicOn={musicOn}
-                toggleMusic={toggleMusic}
-              />
-            )}
+          {scene === "cake" && (
+            <CakeScene onNext={next} />
+          )}
 
-            {scene === "cake" && <CakeScene onNext={next} />}
-            {scene === "album" && <AlbumScene onNext={next} />}
-            {scene === "balloons" && <BalloonScene onNext={next} />}
-            {scene === "gifts" && <GiftsScene onNext={next} />}
-            {scene === "message" && <MessageScene onNext={next} />}
-            {scene === "final" && (
-              <FinalScene onNext={() => setScene("hero")} />
-            )}
-          </motion.section>
-        </AnimatePresence>
+          {scene === "album" && (
+            <AlbumScene onNext={next} />
+          )}
 
-      </main>
-    </>
+          {scene === "balloons" && (
+            <BalloonScene onNext={next} />
+          )}
+
+          {scene === "gifts" && (
+            <GiftsScene onNext={next} />
+          )}
+
+          {scene === "message" && (
+            <MessageScene onNext={next} />
+          )}
+
+          {scene === "final" && (
+            <FinalScene onNext={reset} />
+          )}
+
+        </motion.section>
+      </AnimatePresence>
+
+    </main>
   );
 };
 
