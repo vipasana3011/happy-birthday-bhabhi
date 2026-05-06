@@ -27,8 +27,8 @@ const Index = () => {
 
   // ➡️ NEXT SCENE
   const next = () => {
-    const index = ORDER.indexOf(scene);
-    const nextScene = ORDER[index + 1] || "final";
+    const i = ORDER.indexOf(scene);
+    const nextScene = ORDER[i + 1] || "final";
 
     console.log("➡️ SCENE CHANGED:", nextScene);
     setScene(nextScene);
@@ -39,7 +39,7 @@ const Index = () => {
     setScene("hero");
   };
 
-  // ✨ smooth animation
+  // ✨ animation
   const variants = {
     initial: { opacity: 0, scale: 1.05 },
     animate: { opacity: 1, scale: 1 },
@@ -47,7 +47,8 @@ const Index = () => {
   };
 
   return (
-    <main className="fixed inset-0 w-screen h-screen overflow-hidden">
+    // ✅ IMPORTANT: SCROLL ENABLED
+    <main className="w-full min-h-screen relative overflow-x-hidden">
 
       <AnimatePresence mode="wait">
         <motion.section
