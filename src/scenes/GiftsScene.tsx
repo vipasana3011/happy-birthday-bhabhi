@@ -19,13 +19,15 @@ export default function GiftsScene({ onNext }: any) {
   const allOpened = opened.length === gifts.length;
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-16">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 gap-10 bg-gradient-to-br from-pink-100 via-purple-100 to-pink-200">
 
-      <h2 className="text-4xl md:text-5xl text-pink-400 font-bold">
+      {/* TITLE */}
+      <h2 className="text-2xl sm:text-3xl md:text-5xl text-pink-500 font-bold text-center">
         Open Your Gifts 🎁
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-14">
+      {/* GRID */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
 
         {gifts.map((g) => {
           const isOpen = opened.includes(g.id);
@@ -34,75 +36,42 @@ export default function GiftsScene({ onNext }: any) {
             <div
               key={g.id}
               onClick={() => openGift(g.id)}
-              className="relative w-44 h-44 cursor-pointer perspective"
+              className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 cursor-pointer"
             >
+              <div className="relative w-full h-full">
 
-              <div className="relative w-full h-full [transform-style:preserve-3d]">
+                {/* BOX */}
+                <div className="absolute bottom-0 w-full h-3/4 rounded-xl bg-gradient-to-br from-pink-300 to-rose-500 shadow-lg flex items-center justify-center">
 
-                {/* 🧱 BASE BOX */}
-                <div className="absolute bottom-0 w-full h-3/4 rounded-2xl bg-gradient-to-br from-pink-300 to-rose-500 shadow-2xl overflow-hidden">
-
-                  {/* inner glow */}
-                  <div className="absolute inset-0 shadow-inner opacity-30" />
-
-                  {/* label */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="px-4 py-1 bg-white text-pink-500 text-sm rounded-full shadow-md font-semibold">
-                      {g.word}
-                    </div>
+                  <div className="px-3 py-1 bg-white text-pink-500 text-xs sm:text-sm rounded-full shadow font-semibold">
+                    {g.word}
                   </div>
-
-                  {/* 3D side depth */}
-                  <div className="absolute -right-2 top-2 w-full h-full bg-rose-600 rounded-2xl opacity-40 -z-10" />
                 </div>
 
-                {/* 🎁 LID */}
+                {/* LID */}
                 <motion.div
                   animate={
                     isOpen
-                      ? { rotateX: -140, y: -30 }
+                      ? { rotateX: -130, y: -20 }
                       : { rotateX: 0, y: 0 }
                   }
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="absolute top-0 w-full h-1/3 rounded-2xl bg-gradient-to-br from-pink-400 to-rose-600 origin-top shadow-xl"
-                  style={{ transformOrigin: "top" }}
+                  transition={{ duration: 0.6 }}
+                  className="absolute top-0 w-full h-1/3 rounded-xl bg-gradient-to-br from-pink-400 to-rose-600 origin-top"
                 >
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-3 text-3xl">
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-2 text-xl sm:text-2xl">
                     🎀
                   </div>
                 </motion.div>
 
-                {/* 🎁 ITEM POP OUT */}
+                {/* ITEM */}
                 {isOpen && (
                   <motion.img
                     src={g.img}
-                    initial={{ y: 30, scale: 0, opacity: 0 }}
-                    animate={{ y: -130, scale: 1.2, opacity: 1 }}
+                    initial={{ y: 20, scale: 0 }}
+                    animate={{ y: -80, scale: 1 }}
                     transition={{ type: "spring", stiffness: 120 }}
-                    className="absolute left-1/2 -translate-x-1/2 top-10 w-28 drop-shadow-2xl z-20"
+                    className="absolute left-1/2 -translate-x-1/2 top-6 w-16 sm:w-20 md:w-24 z-20"
                   />
-                )}
-
-                {/* ✨ SPARKLES */}
-                {isOpen && (
-                  <>
-                    {[...Array(12)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 1, scale: 0 }}
-                        animate={{
-                          opacity: 0,
-                          scale: 1.5,
-                          x: Math.random() * 120 - 60,
-                          y: Math.random() * -120,
-                        }}
-                        transition={{ duration: 1 }}
-                        className="absolute left-1/2 top-1/2 text-yellow-300 text-lg"
-                      >
-                        ✨
-                      </motion.div>
-                    ))}
-                  </>
                 )}
 
               </div>
@@ -111,12 +80,13 @@ export default function GiftsScene({ onNext }: any) {
         })}
       </div>
 
+      {/* BUTTON */}
       <button
         onClick={onNext}
         disabled={!allOpened}
-        className={`px-8 py-4 rounded-full text-white transition ${
+        className={`mt-6 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-white transition ${
           allOpened
-            ? "bg-pink-500 hover:scale-105 shadow-xl"
+            ? "bg-pink-500 hover:scale-105 shadow-lg"
             : "bg-gray-300"
         }`}
       >
