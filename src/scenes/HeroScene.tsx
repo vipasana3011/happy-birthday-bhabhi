@@ -4,12 +4,33 @@ import FloatingHearts from "@/components/FloatingHearts";
 import { SceneProps } from "./types";
 
 const HeroScene = ({ onNext }: SceneProps) => {
+
+  // 🎵 MUSIC START FUNCTION
+  const handleBegin = async () => {
+    const audio = (window as any).globalMusic?.current;
+
+    if (audio) {
+      audio.volume = 0.4;
+      try {
+        await audio.play();
+      } catch (e) {
+        console.log("Music blocked:", e);
+      }
+    }
+
+    onNext(); // 🎬 next scene
+  };
+
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden px-4 py-10">
 
+      {/* background */}
       <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
+
+      {/* floating hearts */}
       <FloatingHearts count={12} />
 
+      {/* content */}
       <div className="relative z-10 text-center w-full max-w-md">
 
         <motion.h1
@@ -32,10 +53,11 @@ const HeroScene = ({ onNext }: SceneProps) => {
           A little surprise made just for you ✨
         </p>
 
+        {/* 🎯 BUTTON (MUSIC + NEXT) */}
         <div className="mt-8">
           <Button
-            onClick={onNext}
-            className="rounded-full px-6 py-4"
+            onClick={handleBegin}
+            className="rounded-full px-6 py-4 bg-pink-500 text-white hover:scale-105 transition"
           >
             Begin ✨
           </Button>
