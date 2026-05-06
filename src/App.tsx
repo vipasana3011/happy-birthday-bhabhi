@@ -12,12 +12,15 @@ const Index = () => {
   const [scene, setScene] = useState(0);
 
   const nextScene = () => {
-    setScene((prev) => prev + 1);
-    console.log("SCENE:", scene + 1); // 👈 DEBUG (important)
+    setScene((prev) => {
+      const next = prev + 1;
+      console.log("➡️ SCENE CHANGED TO:", next);
+      return next;
+    });
   };
 
   return (
-    <div className="w-full min-h-screen overflow-y-auto">
+    <div className="w-full min-h-screen overflow-hidden">
 
       {scene === 0 && <HeroScene onNext={nextScene} />}
       {scene === 1 && <CakeScene onNext={nextScene} />}
