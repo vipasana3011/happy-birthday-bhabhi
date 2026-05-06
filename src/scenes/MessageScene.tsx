@@ -20,15 +20,15 @@ const MessageScene = ({ onNext }: SceneProps) => {
   const [opened, setOpened] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden px-4 py-8 bg-gradient-to-b from-pink-50/40 to-rose-100/30">
+    <div className="relative w-full min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-b from-pink-50/40 to-rose-100/30 overflow-hidden">
 
-      {/* 💖 floating hearts */}
+      {/* 💖 hearts */}
       <FloatingHearts count={8} variant="hearts" />
 
-      {/* ✨ background glow */}
+      {/* glow */}
       <div className="absolute w-64 h-64 sm:w-96 sm:h-96 bg-pink-300/25 blur-3xl rounded-full animate-pulse" />
 
-      {/* 💌 LETTER CARD */}
+      {/* card */}
       <motion.div
         initial={{ rotateX: 20, scale: 0.9, opacity: 0 }}
         animate={
@@ -84,21 +84,19 @@ const MessageScene = ({ onNext }: SceneProps) => {
               ))}
             </motion.div>
 
-            {/* ✅ FIXED BUTTON (ALWAYS VISIBLE) */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="mt-6 flex justify-center"
-            >
+            {/* ✅ BUTTON (FIXED) */}
+            <div className="mt-6 flex justify-center">
               <Button
                 size="lg"
-                onClick={onNext}
-                className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg"
+                onClick={(e) => {
+                  e.stopPropagation(); // 🔥 IMPORTANT FIX
+                  onNext();
+                }}
+                className="rounded-full px-6 sm:px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-lg hover:scale-105"
               >
                 Continue 💖
               </Button>
-            </motion.div>
+            </div>
 
           </div>
         </div>
